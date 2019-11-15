@@ -1,0 +1,35 @@
+{
+  "name": "myportfolio-master",
+  "version": "1.0.0",
+  "description": "My Portfolio",
+  "main": "gulpfile.js",
+  "scripts": {
+    "test": "Html5, Css3, Js, jQ, Gulpfile"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gmanriqe/myportfolio.git"
+  },
+  "keywords": [
+    "Html5",
+    "Css3",
+    "Js",
+    "jQ",
+    "Gulpfile"
+  ],
+  "author": "GManriqe",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/gmanriqe/myportfolio/issues"
+  },
+  "homepage": "https://github.com/gmanriqe/myportfolio#readme",
+  "devDependencies": {
+    "browser-sync": "^2.26.7",
+    "gulp": "^4.0.2",
+    "gulp-autoprefixer": "^7.0.0",
+    "gulp-clean-css": "^4.2.0",
+    "gulp-concat": "^2.6.1",
+    "gulp-jsmin": "^0.1.5",
+    "gulp-rename": "^1.4.0"
+  }
+}
