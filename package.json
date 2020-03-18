@@ -4,7 +4,8 @@
   "description": "My Portfolio",
   "main": "gulpfile.js",
   "scripts": {
-    "test": "Html5, Css3, Js, jQ, Gulpfile"
+    "test": "Html5, Css3, Js, jQ, Gulpfile",
+    "gulp": "gulp"
   },
   "repository": {
     "type": "git",
@@ -25,6 +26,7 @@
   "homepage": "https://github.com/gmanriqe/myportfolio#readme",
   "devDependencies": {
     "browser-sync": "^2.26.7",
+    "browserslist": "^4.9.1",
     "gulp": "^4.0.2",
     "gulp-autoprefixer": "^7.0.0",
     "gulp-clean-css": "^4.2.0",
