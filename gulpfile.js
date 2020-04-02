@@ -51,11 +51,13 @@ function pluginsJavascript(){
 }
 
 function images(){
+    // Only send files
 	return gulp.src('source/images/*')
     .pipe(gulp.dest('dist/img/'));
 }
 
 function fonts(){
+    // Only send files
 	return gulp.src('source/fonts/**/*')
     .pipe(gulp.dest('dist/fonts/'));
 }
