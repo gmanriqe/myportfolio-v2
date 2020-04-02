@@ -1,73 +1,80 @@
-var gulp = require('gulp');
-var browserSync = require('browser-sync').create();
-var browserslist= require('browserslist');
-var autoprefixer = require("gulp-autoprefixer");
-var concat = require('gulp-concat'); /* concatenando css */
-var cleanCSS = require("gulp-clean-css"); /* minificando y limpiando comentarios css */
-var jsmin = require("gulp-jsmin"); /* minifico js */
-var rename = require("gulp-rename"); /* renombro archivos */
+var gulp            = require('gulp');
+var postcss         = require('gulp-postcss');
+var autoprefixer    = require('autoprefixer');
+var cssImport       = require('postcss-import');
+var nested          = require('postcss-nested');
+var cssnano = require('cssnano');
+
+var stylelint       = require('stylelint');
+var stylelintConfig = require('./stylelintrc.config');
+var reporter        = require('postcss-reporter');
+
+var uglify          = require('gulp-uglify');
+var rename          = require("gulp-rename");
+
+var plugins = [
+    cssImport,
+    nested,
+    autoprefixer({ overrideBrowserslist: ['last 2 versions', 'ie 6-8', 'Firefox > 20']  }),
+    cssnano,
+    stylelint(stylelintConfig),
+    reporter({
+        // Pretty reporting config
+        clearMessages: true,
+        throwError: true
+    }),
+];
 
 function style(){
-    return gulp.src([
-            "css/menu-animate.css",
-            "css/style.css",
-            "css/media-queries.css"
-        ])
-        .pipe(autoprefixer(
-            {
-                'overrideBrowserslist': ['last 2 versions'] //https://github.com/browserslist/browserslist#full-list
-            }
-        ))
-        .pipe(cleanCSS())
-        .pipe(rename("style.min.css"))
-        .pipe(concat("style.min.css"))
-        .pipe(gulp.dest("css/public/"))
-        .pipe(browserSync.stream());
+    return gulp.src('source/css/style.css')
+    .pipe(postcss(plugins))
+    .pipe(gulp.dest('dist/css/'));
+}
+
+function pluginsStyle(){ 
+    // Only send files
+    return gulp.src('source/css/plugins/*.css')
+    .pipe(gulp.dest('dist/css/plugins/'));
 }
 
 function javascript(){
-    return gulp.src("./js/app.js")
-        .pipe(jsmin())
-        .pipe(rename("app.min.js"))
-        .pipe(gulp.dest('js/public/'))
-        .pipe(browserSync.stream());
+    return gulp.src(['source/javascript/app.js'])
+    .pipe(uglify())
+    .pipe(rename('app.js'))
+    .pipe(gulp.dest('dist/js/'));
 }
 
-function watchFiles() {
-    gulp.watch('css/style.css', style);
-    gulp.watch('js/app.js', javascript);
-    gulp.watch('*.html').on('change', browserSync.reload);
+function pluginsJavascript(){
+    // Only send files
+    return gulp.src(['source/javascript/plugins/*.js'])
+    .pipe(gulp.dest('dist/js/plugins/'));
 }
 
-function browser() {
-
-    browserSync.init({
-        server: {
-            baseDir: "./"
-        },
-        port: 8080
-    });
+function images(){
+	return gulp.src('source/images/*')
+    .pipe(gulp.dest('dist/img/'));
 }
 
-const watch = gulp.series(style, javascript, gulp.parallel(watchFiles, browser));
+function fonts(){
+	return gulp.src('source/fonts/**/*')
+    .pipe(gulp.dest('dist/fonts/'));
+}
+
+function pdf(){
+    // Only send files
+    return gulp.src(['source/pdf/*.*'])
+    .pipe(gulp.dest('dist/pdf/'));
+}
+
+function watchFiles(){
+    gulp.watch('source/css/*.css', style);
+    gulp.watch('source/css/plugins/*.css', pluginsStyle);
+    gulp.watch('ource/javascript/*.js', javascript);
+    gulp.watch('source/javascript/plugins/*.js', pluginsJavascript);
+    gulp.watch('source/img/*', images);
+    gulp.watch('source/fonts/**/*', fonts);
+    gulp.watch('source/pdf/*', pdf);
+}
+
+const watch = gulp.series(style, pluginsStyle, javascript, pluginsJavascript, images, fonts, pdf, gulp.parallel(watchFiles));
 exports.default = watch;
-
-// Save a reference to the `reload` method
-// Watch scss AND html files, doing different things with each.
-// gulp.task('serve', function () {
-
-//     browserSync.init({
-//         server: {
-//             baseDir: "./"
-//         },
-//         port: 8080
-//     });
-
-//     gulp.watch("*.html").on("change", browserSync.reload);
-//     gulp.watch("./css/style.css").on("change", browserSync.reload);
-//     gulp.watch("./js/app.js").on("change", browserSync.reload);
-// });
-
-
-/** correr todas las tareas */
-// gulp.task("default", gulp.parallel("css","js"));
